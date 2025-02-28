@@ -8,7 +8,7 @@ from nav_msgs.msg import OccupancyGrid, MapMetaData
 from sensor_msgs.msg import PointCloud2
 from sensor_msgs_py.point_cloud2 import read_points
 from visualization_msgs.msg import Marker
-from geometry_msgs.msg import Point32, Pose, Quaternion, Vector3
+from geometry_msgs.msg import Point, Pose, Quaternion, Vector3
 
 from tf2_ros import Buffer, TransformListener, TransformStamped
 from tf2_ros import TransformException
@@ -313,7 +313,7 @@ class NOORDetection(Node):
             for point_idx in range(scan_lines.shape[0]):
                 x, y, z = scan_lines[point_idx, angle_idx, :]
                 if not np.isnan(z):  # Ensure the point is valid
-                    new_point = Point32()
+                    new_point = Point()
                     new_point.x = float(x)
                     new_point.y = float(y)
                     new_point.z = float(z)
@@ -337,13 +337,13 @@ class NOORDetection(Node):
             x1, y1, z1 = point1
             x2, y2, z2 = point2
 
-            new_point1 = Point32()
+            new_point1 = Point()
             new_point1.x = float(x1)
             new_point1.y = float(y1)
             new_point1.z = float(z1)
             marker.points.append(new_point1)
 
-            new_point2 = Point32()
+            new_point2 = Point()
             new_point2.x = float(x2)
             new_point2.y = float(y2)
             new_point2.z = float(z2)
