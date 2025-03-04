@@ -242,8 +242,7 @@ private:
             }
 
             double expected_deviation = 2.0 * vdl_[vertical_channels_ - row - 1];
-            float deviation = sqrt((current_point[0] - (*last_point)[0]) * (current_point[0] - (*last_point)[0]) + 
-                                  (current_point[1] - (*last_point)[1]) * (current_point[1] - (*last_point)[1]));
+            float deviation = sqrt(pow(current_point[0] - (*last_point)[0], 2) + pow(current_point[1] - (*last_point)[1], 2));
             // if the current point is within the threshold distance, update the last valid point
             if (deviation < expected_deviation){
                 last_point = &current_point;
