@@ -58,7 +58,7 @@ public:
         // calculate the detlas between points
         for (size_t i=0; i < vertical_channels_; i++){
             size_t prev_index = (i==0) ? vertical_channels_ - 1 : i - 1;
-            vdl_[i] = rho_i_[i] - rho_i_[i+1];
+            vdl_[i] = abs(rho_i_[i] - rho_i_[prev_index]);
         }
 
         RCLCPP_INFO(this->get_logger(), "Negative Obstacle Detection Node has been started");
@@ -122,22 +122,22 @@ private:
 
         // extract relevant Occupancy Grid Information
         nav_msgs::msg::MapMetaData map_info = occupancy_grid_->info;
-        geometry_msgs::msg::Pose map_origin = occupancy_grid_->info.origin;
-        const int map_width = occupancy_grid_->info.width;
-        const int map_height = occupancy_grid_->info.height;
-        const double map_resolution = occupancy_grid_->info.resolution;
+        geometry_msgs::msg::Pose map_origin = map_info.origin;
+        const int map_width = map_info.width;
+        const int map_height = map_info.height;
+        const double map_resolution = map_info.resolution;
 
         // make a risk map and a combined map for publishing
         nav_msgs::msg::OccupancyGrid risk_map;
         risk_map.header.frame_id = occupancy_grid_->header.frame_id;
         risk_map.header.stamp = this->now();
-        risk_map.info = occupancy_grid_->info;
+        risk_map.info = map_info;
         risk_map.data = vector<int8_t>(map_width * map_height, 0);
 
         nav_msgs::msg::OccupancyGrid combined_map;
         combined_map.header.frame_id = occupancy_grid_->header.frame_id;
         combined_map.header.stamp = this->now();
-        combined_map.info = occupancy_grid_->info;
+        combined_map.info = map_info;
         combined_map.data = occupancy_grid_->data;
 
         // get the transformation between the LIDAR frame and the costmap frame
@@ -219,7 +219,7 @@ private:
         FeaturePoints feature_points_col;
         array<float, 3>* last_point = nullptr;
         
-        for (size_t row=vertical_channels_ - 1; row >= 0; row--){
+        for (int row=vertical_channels_ - 1; row >= 0; row--){
             array<float, 3>& current_point = point_cloud_array[row][col];
 
             // skip over any current_points that are too closer to the LIDAR
