@@ -53,7 +53,7 @@ public:
         }
         // calcualte ground distance from LIDAR to point
         for (size_t i=0; i < vertical_channels_; i++){
-            rho_i_[i] = lidar_height_ / tanf(vertical_angles_rad_[i]);
+            rho_i_[i] = lidar_height_ / tanf(-vertical_angles_rad_[i]);
         }
         // calculate the detlas between points
         for (size_t i=0; i < vertical_channels_; i++){
