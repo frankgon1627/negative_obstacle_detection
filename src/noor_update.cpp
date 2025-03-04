@@ -109,14 +109,14 @@ private:
         array<future<FeaturePoints>, horizontal_channels_> futures;
         for (size_t col=0; col < horizontal_channels_; col++){
             futures[col] = async(launch::async, [this, &point_cloud_array, col]() { 
-              return process_scan_column(point_cloud_array, col); 
+                return process_scan_column(point_cloud_array, col); 
             });
         }
 
         // collect the results from each future
         for (size_t col=0; col < horizontal_channels_; col++){
             FeaturePoints feature_points_col = futures[col].get();
-            feature_points.insert(feature_points.end(), futures[col].get().begin(), futures[col].get().end());
+            feature_points.insert(feature_points.end(), feature_points_col.begin(), feature_points_col.end());
         }
         publish_feature_points(feature_points);
 
@@ -200,16 +200,16 @@ private:
 
         for (size_t i = 0; i < msg->height; i++){
             for (size_t j = 0; j < msg->width; j++, ++it_x, ++it_y, ++it_z){
-                  // if the norm is under a threshold, set values to nan
-                  double norm = sqrt((*it_x) * (*it_x) + (*it_y) * (*it_y) + (*it_z) * (*it_z));
-                  if (norm < 0.5){
-                      point_cloud_array[i][j] = {numeric_limits<float>::quiet_NaN(), 
+                // if the norm is under a threshold, set values to nan
+                double norm = sqrt((*it_x) * (*it_x) + (*it_y) * (*it_y) + (*it_z) * (*it_z));
+                if (norm < 0.5){
+                    point_cloud_array[i][j] = {numeric_limits<float>::quiet_NaN(), 
                                                 numeric_limits<float>::quiet_NaN(), 
                                                 numeric_limits<float>::quiet_NaN()};
-                  }
-                  else{
-                      point_cloud_array[i][j] = {*it_x, *it_y, *it_z};
-                  }
+                }
+                else{
+                    point_cloud_array[i][j] = {*it_x, *it_y, *it_z};
+                }
             }
         }
         return point_cloud_array;
@@ -229,7 +229,7 @@ private:
 
             // initialize first valid current_point
             if(last_point == nullptr){
-              last_point = &current_point;
+                last_point = &current_point;
                 continue;
             }
 
@@ -254,7 +254,7 @@ private:
             else{
                 float risk  = deviation / expected_deviation;
                 feature_points_col.push_back({(*last_point)[0], (*last_point)[1], (*last_point)[2], 
-                                              current_point[0], current_point[1], current_point[2], risk});
+                                                current_point[0], current_point[1], current_point[2], risk});
                 last_point = &current_point;
             }
         }
