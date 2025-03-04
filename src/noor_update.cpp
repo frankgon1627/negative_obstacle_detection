@@ -129,14 +129,12 @@ private:
 
         // make a risk map and a combined map for publishing
         nav_msgs::msg::OccupancyGrid risk_map;
-        risk_map.header.frame_id = occupancy_grid_->header.frame_id;
-        risk_map.header.stamp = this->now();
+        risk_map.header = occupancy_grid_->header;
         risk_map.info = map_info;
         risk_map.data = vector<int8_t>(map_width * map_height, 0);
 
         nav_msgs::msg::OccupancyGrid combined_map;
-        combined_map.header.frame_id = occupancy_grid_->header.frame_id;
-        combined_map.header.stamp = this->now();
+        combined_map.header = occupancy_grid_->header;
         combined_map.info = map_info;
         combined_map.data = occupancy_grid_->data;
 
