@@ -18,7 +18,6 @@
 using namespace std;
 using PointArray = array<array<array<float, 3>, 1024>, 64>;
 using FeaturePoints = vector<array<float, 7>>;
-constexpr float nan = std::numeric_limits<float>::quiet_NaN();
 constexpr size_t vertical_channels_ = 64;
 constexpr size_t horizontal_channels_ = 1024;
 
