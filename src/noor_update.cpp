@@ -168,7 +168,7 @@ private:
                 int cell_j = grid_cell.second;
 
                 // ensure the cell is within the grid
-                if(0 < cell_i && cell_i < map_height && 0 < cell_j && cell_j < map_width){
+                if(0 <= cell_i && cell_i < map_height && 0 <= cell_j && cell_j < map_width){
                     int8_t cell_value = min(static_cast<int8_t>(norm*risk), static_cast<int8_t>(100));
                     // set the risk value in the risk map
                     risk_map.data[cell_i * map_width + cell_j] = cell_value;
@@ -287,13 +287,14 @@ private:
 
     void publish_feature_points(FeaturePoints& feature_points){
         visualization_msgs::msg::Marker marker;
-        marker.header.frame_id = occupancy_grid_->header.frame_id;
+        marker.header.frame_id = "os_sensor";
         marker.header.stamp = this->now();
         marker.ns = "feature_points";
         marker.id = 0;
-        marker.type = visualization_msgs::msg::Marker::LINE_LIST;
+        marker.type = visualization_msgs::msg::Marker::POINTS;
         marker.action = visualization_msgs::msg::Marker::ADD;
-        marker.scale.x = 0.1;
+        marker.scale.x = 0.05;
+        marker.scale.y = 0.05;
 
         for (const array<float, 7>& point : feature_points){
             geometry_msgs::msg::Point p1, p2;
