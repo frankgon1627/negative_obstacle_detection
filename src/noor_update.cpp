@@ -167,7 +167,7 @@ private:
 
                 // ensure the cell is within the grid
                 if(0 <= cell_i && cell_i < map_height && 0 <= cell_j && cell_j < map_width){
-                    int8_t cell_value = min(static_cast<int8_t>(norm*risk), static_cast<int8_t>(100));
+                    int8_t cell_value = static_cast<int8_t>(min(norm*risk, 100.0f));
                     // set the risk value in the risk map
                     risk_map.data[cell_i * map_width + cell_j] = cell_value;
                     // set the combined value in the combined map
